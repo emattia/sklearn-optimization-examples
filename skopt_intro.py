@@ -25,7 +25,7 @@ my_config = {
     'budget': 5
 }
 
-opt = BayesSearchCV(
+opt = SigOptSearchCV(
     SVC(), # swap for an sklearn.base.Estimator
     {
         'C': (1e-6, 1e+6, 'log-uniform'),
