@@ -30,51 +30,52 @@ parameters = [    ### SIGOPT PARAM CONFIG ###
 my_config = {
     'name': 'My Exp',
     # 'parameters': parameters,
-    'metrics': [{'name': 'always scores -1'}],
-    'budget': 5
+    # 'metrics': [{'name': 'always scores -1'}],
+    # 'budget': 3
 }
 
 opt = SigOptSearchCV(
     estimator = SVC(), # swap for an sklearn.base.Estimator
 
-    search_spaces = {   ### BAYES SEARCH CV PARAM CONFIG ###
-        'C': (1e-6, 1e+6, 'log-uniform'),
-        'gamma': (1e-6, 1e+1, 'log-uniform'),
-        'degree': (1, 8),  # integer valued parameter
-        'kernel': ['linear', 'poly', 'rbf'],  # categorical parameter
-    },
-
-    # param_grid = {    ### GRID SEARCH CV PARAM CONFIG ### NOT YET IMPLEMENTED
-    #     'C': [1e-6, 1e+6],
-    #     'gamma': [1e-6, 1e+1],
-    #     'degree': [1, 8],  # integer valued parameter
+    # search_spaces = {   ### BAYES SEARCH CV PARAM CONFIG ###
+    #     'C': (1e-6, 1e+6, 'log-uniform'),
+    #     'gamma': (1e-6, 1e+1, 'log-uniform'),
+    #     'degree': (1, 8),  # integer valued parameter
     #     'kernel': ['linear', 'poly', 'rbf'],  # categorical parameter
     # },
 
-    ### STRING 
-    scoring='accuracy', 
+    param_grid = {    ### GRID SEARCH CV PARAM CONFIG ### NOT YET IMPLEMENTED
+        'C': [1e-6, 1e+6],
+        'gamma': [1e-6, 1e+1],
+        'degree': [1, 8],  # integer valued parameter
+        'kernel': ['linear', 'poly', 'rbf'],  # categorical parameter
+    },
+
+    ### STRING ### 
+    # scoring='accuracy', 
 
     ### LIST OR TUPLE OF STRINGS + refit --> Doesnt work for multiclass bc of sklearn, should generate same error msg
     # TODO: Binary class example for testing this option
     # scoring = [make_scorer(accuracy_score), make_scorer(f1_score)], refit='accuracy',
     
-    ### CALLABLE + refit
+    ### CALLABLE + refit ### 
     # scoring = f, refit='score',
 
-    ### DICTIONARY | key (name): value (scorer) + refit
-    # scoring={ 
-    #     'f1': make_scorer(f1_score, average='weighted'),
-    #     'f2': make_scorer(fbeta_score, beta=2, average="weighted"), 
-    #     'acc score': make_scorer(accuracy_score),
-    #     'always scores -1': f
-    # }, refit = 'f1', 
+    ### DICTIONARY | key (name): value (scorer) + refit ### 
+    scoring={ 
+        'f1': make_scorer(f1_score, average='weighted'),
+        'f2': make_scorer(fbeta_score, beta=2, average="weighted"), 
+        'acc score': make_scorer(accuracy_score),
+        'always scores -1': f
+    }, refit = 'f1', 
     # BayesSearch CV convention is to select 'score' metric as optimization target
 
     ### COMMON ### 
     cv=3,
 
     ### SIGOPT and BAYES SEARCH ### 
-    n_iter=5, # if budget in exp_config, this is overridden
+    n_iter=2, # if budget in exp_config, this is overridden
+    # n_points=2,
 
     ### SIGOPT SEARCH ### 
     project_id = 'random',
