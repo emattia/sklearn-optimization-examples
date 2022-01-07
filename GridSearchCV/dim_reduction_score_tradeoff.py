@@ -32,9 +32,7 @@ pipe = Pipeline(
 )
 
 param_grid = {"reduce_dim__n_components": [6, 8, 10, 12, 14]}
-
 metric_name = "accuracy"
-
 grid = GridSearchCV(
     pipe,
     cv=2,
@@ -45,9 +43,6 @@ grid = GridSearchCV(
 )
 X, y = load_digits(return_X_y=True)
 grid.fit(X, y)
-
-
 n_components = grid.cv_results_["param_reduce_dim__n_components"]
 test_scores = grid.cv_results_[f"mean_test_{metric_name}"]
-
 print(n_components, test_scores)
