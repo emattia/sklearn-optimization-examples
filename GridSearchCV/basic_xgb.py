@@ -12,11 +12,10 @@ clf = xgb.XGBClassifier(eval_metric='mlogloss', use_label_encoder=False)
 parameters = {
   "eta"              : [0.10, 0.20, 0.30],
   "max_depth"        : [3, 6, 12],
-  "min_child_weight" : [ 1, 3, 5, 7 ],
   "gamma"            : [0.0, 0.2],
   "colsample_bytree" : [0.5 , 0.7]
 } 
-sigopt.set_project('random')
 # tuning_estimator = GridSearchCV(clf, parameters, n_jobs=4,scoring="neg_log_loss",cv=3)
+sigopt.set_project('random')
 tuning_estimator = SigOptSearchCV(clf, parameters, n_jobs=4,scoring="neg_log_loss",cv=3)
 tuning_estimator.fit(X_train, Y_train)

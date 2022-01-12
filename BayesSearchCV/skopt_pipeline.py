@@ -1,3 +1,6 @@
+### TODO: get link. 
+### TODO: test SigOptSearchCV drop in
+
 from skopt import BayesSearchCV
 from skopt.space import Real, Categorical, Integer
 from skopt.plots import plot_objective, plot_histogram
