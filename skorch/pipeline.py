@@ -12,9 +12,9 @@ X, y = make_classification(1000, 20, n_informative=10, random_state=0)
 X = X.astype(np.float32)
 y = y.astype(np.int64)
 
-class MyModule(nn.Module):
+class SkorchModule(nn.Module):
     def __init__(self, num_units=10, nonlin=F.relu):
-        super(MyModule, self).__init__()
+        super(SkorchModule, self).__init__()
 
         self.dense0 = nn.Linear(20, num_units)
         self.nonlin = nonlin
