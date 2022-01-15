@@ -31,7 +31,7 @@ class SkorchModule(nn.Module):
 
 
 net = NeuralNetClassifier(
-    MyModule,
+    SkorchModule,
     max_epochs=8,
     lr=0.1,
     iterator_train__shuffle=True,
