@@ -1,5 +1,4 @@
 import sigopt.sklearn
-from sigopt.sklearn.run import run
 from sklearn.datasets import load_wine
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
