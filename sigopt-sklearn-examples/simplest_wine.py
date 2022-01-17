@@ -8,5 +8,5 @@ train_x,test_x,train_y,test_y = train_test_split(X,y)
 svc = SVC()
 validation_sets = [(test_x, test_y, "test")]
 sigopt.set_project('random')
-run_context = sigopt.sklearn.run(train_x, train_y, SVC(), validation_sets=validation_sets)
+run_context = sigopt.sklearn.run(train_x, train_y, SVC(), validation_sets=validation_sets, params={'C': 1.5})
 run_context.run.end()
