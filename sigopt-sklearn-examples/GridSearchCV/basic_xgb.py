@@ -2,7 +2,8 @@
 from sklearn import datasets
 from sklearn.model_selection import train_test_split, GridSearchCV
 import xgboost as xgb
-from skopt.searchcv import SigOptSearchCV
+# from skopt.searchcv import SigOptSearchCV
+from sigopt.sklearn.searchcv import SigOptSearchCV
 import sigopt
 iris = datasets.load_iris()
 X = iris.data
