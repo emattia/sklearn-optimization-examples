@@ -46,7 +46,7 @@ sigopt_experiment_config = {    # you don't need to specify any of these,
 
 sigopt.set_project('random')
 
-opt = BayesSearchCV(
+opt = SigOptSearchCV(
     estimator = SVC(), # sklearn.base.Estimator
 
     ### BayesSearchCV param config ###
@@ -82,7 +82,7 @@ opt = BayesSearchCV(
     scoring={ 
         'f1': make_scorer(f1_score, average='weighted'),
         'f2': make_scorer(fbeta_score, beta=2, average="weighted"), 
-        'test': make_scorer(accuracy_score),
+        'my accuracy': make_scorer(accuracy_score),
         # 'always scores -1': make_scorer(f, greater_is_better=True)
     }, refit = 'f1', 
     # if no metric space is specified, `refit` value is used as optimization target.
