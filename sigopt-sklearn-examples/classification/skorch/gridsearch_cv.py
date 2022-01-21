@@ -1,17 +1,13 @@
 from sigopt.sklearn import SigOptSearchCV
+from sklearn.model_selection import GridSearchCV
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 import numpy as np
 from sklearn.datasets import make_classification
 from torch import nn
 import torch.nn.functional as F
-
 from skorch import NeuralNetClassifier
 
-
-X, y = make_classification(1000, 20, n_informative=10, random_state=0)
-X = X.astype(np.float32)
-y = y.astype(np.int64)
 
 class MyModule(nn.Module):
     def __init__(self, num_units=10, nonlin=F.relu):
@@ -30,7 +26,6 @@ class MyModule(nn.Module):
         X = F.softmax(self.output(X), dim=1)
         return X
 
-
 net = NeuralNetClassifier(
     MyModule,
     max_epochs=8,
@@ -38,17 +33,19 @@ net = NeuralNetClassifier(
     iterator_train__shuffle=True,
 )
 
-from sklearn.model_selection import GridSearchCV
-
-
 params = {
     'lr': [0.01, 0.02],
     'max_epochs': [10, 20],
     'module__num_units': [10, 20],
 }
+
+X, y = make_classification(1000, 20, n_informative=10, random_state=0)
+X = X.astype(np.float32)
+y = y.astype(np.int64)
+
 import sigopt
 sigopt.set_project('random')
-gs = SigOptSearchCV(net, params, refit=False, cv=3, scoring='accuracy')
+gs = SigOptSearchCV(net, params, refit=False, cv=3, n_iter=8, scoring='accuracy')
 
 gs.fit(X, y)
 print(gs.best_score_)
