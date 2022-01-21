@@ -1,3 +1,4 @@
+from sigopt.sklearn import run
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 import numpy as np
@@ -42,5 +43,8 @@ pipe = Pipeline([
     ('net', net),
 ])
 
-pipe.fit(X, y)
-y_proba = pipe.predict_proba(X)
+skorch_run = run(estimator=pipe, train_X=X, train_y = y, run_options={'estimator_name': 'SkorchModule'})
+y_proba = skorch_run.model.predict_proba(X)
+
+# pipe.fit(X,y)
+# y_proba = pipe.predict_proba(X)
