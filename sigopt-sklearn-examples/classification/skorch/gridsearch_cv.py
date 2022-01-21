@@ -1,3 +1,4 @@
+from sigopt.sklearn import SigOptSearchCV
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 import numpy as np
@@ -45,7 +46,10 @@ params = {
     'max_epochs': [10, 20],
     'module__num_units': [10, 20],
 }
-gs = GridSearchCV(net, params, refit=False, cv=3, scoring='accuracy')
+import sigopt
+sigopt.set_project('random')
+gs = SigOptSearchCV(net, params, refit=False, cv=3, scoring='accuracy')
 
 gs.fit(X, y)
-print(gs.best_score_, gs.best_params_)
+print(gs.best_score_)
+print(gs.best_params_)
