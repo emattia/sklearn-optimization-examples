@@ -10,7 +10,6 @@ sigopt.set_project('random')
 experiment_config = {
   'parameters': [{'name': 'learning_rate', 'type': 'double', 'bounds': {'min':0.1, 'max':.5}}, 
                  {'name': 'max_depth'    , 'type': 'int'   , 'bounds': {'min':3  , 'max':12}}],
-  # 'metrics': [{'name': 'test-accuracy', 'strategy': 'optimize', 'objective': 'maximize'}],
   'budget': 2
 }
 experiment = sigopt.sklearn.experiment(

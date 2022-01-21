@@ -12,11 +12,14 @@ def custom_acc(estimator, X, y_true):
   return numpy.mean(estimator.predict(X) == y_true)
 sigopt.set_project('random')
 run_context = sigopt.sklearn.run(
+  SVC(), 
   train_x, 
   train_y, 
-  SVC(), 
   validation_sets=validation_sets, 
   scoring={"my-acc":custom_acc, "my-f1":make_scorer(f1_score, average='micro')},
-  run_options={"autolog_metrics":False}
+  run_options={
+    "name": "custom score SVC",
+    "params_as_metadata": ["verbose", "break_ties"]
+  }
 )
 run_context.run.end()

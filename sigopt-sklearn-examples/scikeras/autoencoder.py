@@ -14,37 +14,28 @@ from tensorflow.keras.datasets import mnist
 import numpy as np
 import matplotlib.pyplot as plt
 
-
 # https://www.adriangb.com/scikeras/stable/notebooks/AutoEncoders.html
 class AutoEncoder(BaseWrapper, TransformerMixin):
     encoder_model_: BaseWrapper
     decoder_model_: BaseWrapper
     def _keras_build_fn(self, encoding_dim: int, meta: Dict[str, Any]):
         n_features_in = meta["n_features_in_"]
-
         encoder_input = keras.Input(shape=(n_features_in,))
         encoder_output = keras.layers.Dense(encoding_dim, activation='relu')(encoder_input)
         encoder_model = keras.Model(encoder_input, encoder_output)
-
         decoder_input = keras.Input(shape=(encoding_dim,))
         decoder_output = keras.layers.Dense(n_features_in, activation='sigmoid', name="decoder")(decoder_input)
         decoder_model = keras.Model(decoder_input, decoder_output)
-
         autoencoder_input = keras.Input(shape=(n_features_in,))
         encoded_img = encoder_model(autoencoder_input)
         reconstructed_img = decoder_model(encoded_img)
-
         autoencoder_model = keras.Model(autoencoder_input, reconstructed_img)
-
         self.encoder_model_ = BaseWrapper(encoder_model, verbose=self.verbose)
         self.decoder_model_ = BaseWrapper(decoder_model, verbose=self.verbose)
-
         return autoencoder_model
 
     def _initialize(self, X, y=None):
         X, _ = super()._initialize(X=X, y=y)
-        # since encoder_model_ and decoder_model_ share layers (and their weights)
-        # X_tf here come from random weights, but we only use it to initialize our models
         X_tf = self.encoder_model_.initialize(X).predict(X)
         self.decoder_model_.initialize(X_tf)
         return X, X
@@ -55,15 +46,9 @@ class AutoEncoder(BaseWrapper, TransformerMixin):
 
     def fit(self, X, y=None, *, sample_weight=None) -> "AutoEncoder":
         super().fit(X=X, y=X, sample_weight=sample_weight)
-        # at this point, encoder_model_ and decoder_model_
-        # are both "fitted" because they share layers w/ model_
-        # which is fit in the above call
         return self
 
     def score(self, X) -> float:
-        # Note: we use 1-MSE as the score
-        # With MSE, "larger is better", but Scikit-Learn
-        # always maximizes the score (e.g. in GridSearch)
         return 1 - mean_squared_error(self.predict(X), X)
 
     def transform(self, X) -> np.ndarray:
@@ -74,12 +59,14 @@ class AutoEncoder(BaseWrapper, TransformerMixin):
         X: np.ndarray = self.decoder_model_.predict(X_tf)
         return self.feature_encoder_.inverse_transform(X)
 
+### LOAD DATA ### 
 (x_train, _), (x_test, _) = mnist.load_data()
 x_train = x_train.astype('float32') / 255.
 x_test = x_test.astype('float32') / 255.
 x_train = x_train.reshape((len(x_train), np.prod(x_train.shape[1:])))
 x_test = x_test.reshape((len(x_test), np.prod(x_test.shape[1:])))
 
+### ESTIMATOR CONFIG ### 
 params = dict(
     loss="binary_crossentropy",
     encoding_dim=32,
@@ -88,8 +75,8 @@ params = dict(
     verbose=False,
     optimizer="adam",
 )
-
 sigopt.set_project('random')
+### FIT AND TRACK ### 
 run_context = sigopt.sklearn.run(
   AutoEncoder(**params), 
   x_train, 
