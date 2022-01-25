@@ -3,9 +3,9 @@ from sklearn.datasets import load_wine
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
 import sigopt.sklearn
-data=load_wine()
-X,y=data.data,data.target
-train_x,test_x,train_y,test_y = train_test_split(X,y)
+data = load_wine()
+X, y = data.data,data.target
+train_x, test_x, train_y, test_y = train_test_split(X,y)
 sigopt.set_project('random')
 experiment = sigopt.sklearn.experiment(
   SVC(), 
