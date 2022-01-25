@@ -1,4 +1,5 @@
 import numpy as np
+from sigopt.sklearn import run
 from sklearn.datasets import make_classification
 from torch import nn
 import torch.nn.functional as F
@@ -35,5 +36,8 @@ net = NeuralNetClassifier(
     iterator_train__shuffle=True,
 )
 
-net.fit(X, y)
-y_proba = net.predict_proba(X)
+# net.fit(X, y)
+# y_proba = net.predict_proba(X)
+
+run_out = run(net, X, y)
+y_proba = run_out.model.predict_proba(X)
