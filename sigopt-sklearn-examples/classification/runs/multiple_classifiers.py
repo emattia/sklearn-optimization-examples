@@ -22,5 +22,5 @@ clfs = [
 validation_sets = [(test1_x, test1_y, "test1"), (test2_x, test2_y, "test2")]
 sigopt.set_project('random')
 for clf in clfs:
-  run_context = sigopt.sklearn.run(train_x, train_y, clf, validation_sets=validation_sets)
+  run_context = sigopt.sklearn.run(clf, train_x, train_y, validation_sets=validation_sets)
   run_context.run.end()
