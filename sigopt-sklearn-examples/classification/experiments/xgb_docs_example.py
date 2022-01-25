@@ -10,10 +10,12 @@ experiment = sigopt.sklearn.experiment(
   train_X = train_X,  
   train_y = train_y,  
   validation_sets = [(test_X, test_y, "test")],  
-  fixed_params = {'num_boost_rounds': 100, 'learning_rate': .1}, 
+  fixed_params = {'num_estimators': 100, 'objective': 'mlogloss'}, 
   experiment_design = { 
     'name': 'XGBClassifier', 'budget': 2,
-    'parameters': [{'name': 'max_depth', 'type': 'int', 'bounds':{'min': 3, 'max':8}}] 
-  }
+    'parameters': [{'name': 'max_depth',     'type': 'int',    'bounds':{'min': 3,   'max':8 }},
+                   {'name': 'learning_rate', 'type': 'double', 'bounds':{'min': .05, 'max':.5}},] 
+  },
+  run_options={'params_as_metadata': ['gpu_id', 'objective', '']}
 )
 print(f'See results at https://app.sigopt.com/experiment/{experiment.id}') 
