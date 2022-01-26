@@ -12,7 +12,9 @@ space = {
     'degree': Integer(1,8),
     'kernel': Categorical(['linear', 'poly', 'rbf']),
 }
-opt = BayesSearchCV(SVC(),space,n_iter=10,random_state=0)
-#opt = SigOptSearchCV(SVC(),space,n_iter=2,random_state=0)
+#opt = BayesSearchCV(SVC(),space,n_iter=10,random_state=0)
+import sigopt
+sigopt.set_project('random')
+opt = SigOptSearchCV(SVC(),space,n_iter=2,random_state=0)
 _ = opt.fit(X_train, y_train)
 print(opt.score(X_test, y_test))
